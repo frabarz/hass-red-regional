@@ -15,6 +15,6 @@ htmlcov/
 *.log
 .storage/
 
-# Local GTFS cache
-gtfs*.zip
+# Local GTFS cache downloads (repo root only; tests/fixtures/*.zip is tracked)
+/gtfs*.zip
 transporte_regional.db
