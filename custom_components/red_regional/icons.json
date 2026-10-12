@@ -1,0 +1,17 @@
+{
+  "entity": {
+    "sensor": {
+      "next_departure": {
+        "default": "mdi:bus-clock"
+      },
+      "departures_count": {
+        "default": "mdi:counter"
+      }
+    },
+    "binary_sensor": {
+      "service_alert": {
+        "default": "mdi:bus-alert"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+# Test-only deps. The homeassistant version under test is NOT pinned here;
+# CI installs it from the matrix (oldest supported 2026.1.x through latest).
+# Local nix devShell always uses the nixpkgs HA (currently 2026.9.x).
+pytest-homeassistant-custom-component>=0.13
+pytest-asyncio
+pytest-aiohttp
+pytest-cov
+respx
+syrupy
+ruff

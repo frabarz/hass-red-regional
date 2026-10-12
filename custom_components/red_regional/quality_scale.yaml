@@ -1,0 +1,38 @@
+# Home Assistant quality scale: Red Regional (target Silver, Bronze minimum).
+rules:
+  appropriate-polling:
+    status: done
+    comment: 60 s default board poll with 30 s floor on a shared coordinator.
+  brand-assets:
+    status: done
+    comment: Local brand/ ships icon.png and icon@2x.png.
+  config-flow:
+    status: done
+  devices:
+    status: done
+  diagnostics:
+    status: done
+  discovery:
+    status: todo
+    comment: Cloud polling API without local discovery transports.
+  documentation:
+    status: done
+  entity-device-class:
+    status: done
+  reauthentication-flow:
+    status: done
+  reconfiguration-flow:
+    status: done
+  repair-issues:
+    status: done
+  stable-device-id:
+    status: done
+    comment: unique_id values derive from zone UUID plus stop code or plate.
+  test-before-configure:
+    status: done
+    comment: Stop codes validate live against stopInfo before entry creation.
+  test-coverage:
+    status: done
+    comment: 100 percent line coverage on all integration modules.
+  unique-config-entry:
+    status: done

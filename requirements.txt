@@ -1,0 +1,2 @@
+# Mirrors custom_components/red_regional/manifest.json -> requirements.
+# Currently zero runtime deps (stdlib + HA-bundled aiohttp only).

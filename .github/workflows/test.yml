@@ -1,0 +1,28 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          # Oldest supported release (HA 2026.1 needs Python >= 3.13.2)
+          - python-version: "3.13"
+            ha-version: "2026.1"
+          # Latest tested release
+          - python-version: "3.14"
+            ha-version: "2026.9"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -r requirements_test.txt
+      - run: pip install "homeassistant==${{ matrix.ha-version }}.*"
+      - run: ruff check . && ruff format --check .
+      - run: pytest --cov --cov-report=term-missing

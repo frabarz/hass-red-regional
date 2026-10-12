@@ -1,0 +1,14 @@
+{
+  "domain": "red_regional",
+  "name": "Red Regional",
+  "version": "0.1.0",
+  "documentation": "https://github.com/frabarz/hass-red-regional",
+  "issue_tracker": "https://github.com/frabarz/hass-red-regional/issues",
+  "codeowners": ["@frabarz"],
+  "config_flow": true,
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "dependencies": [],
+  "homeassistant": "2026.1.0"
+}

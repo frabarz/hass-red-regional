@@ -1,0 +1,166 @@
+{
+  "title": "Red Regional",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Select zone",
+        "description": "Choose the city (operating zone) for this stop.",
+        "data": {
+          "zone_uuid": "Zone"
+        }
+      },
+      "stop": {
+        "title": "Add bus stop",
+        "description": "Enter the stop code painted on the stop sign, e.g. P45068.",
+        "data": {
+          "stop_code": "Stop code"
+        }
+      },
+      "filters": {
+        "title": "Departure options",
+        "description": "Optional filters and polling. Use commas for lists; tracked routes as ROUTE or ROUTE:I|R.",
+        "data": {
+          "routes_whitelist": "Only these routes",
+          "destinations": "Only these destinations",
+          "max_departures": "Max departures",
+          "look_ahead_min": "Look ahead (minutes)",
+          "walk_offset_min": "Walking time (minutes)",
+          "track_vehicles": "Track live bus positions",
+          "tracked_routes": "Tracked routes",
+          "scan_interval_s": "Poll every (seconds)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect Red Regional",
+        "description": "The backend rejected recent requests. Confirm to retry this stop.",
+        "data": {}
+      },
+      "reconfigure": {
+        "title": "Change Red Regional stop",
+        "description": "Pick a new zone or stop code for this entry.",
+        "data": {
+          "zone_uuid": "Zone",
+          "stop_code": "Stop code"
+        }
+      }
+    },
+    "error": {
+      "invalid_stop": "Invalid stop code for this zone.",
+      "cannot_connect": "Cannot connect to TransApp backend."
+    },
+    "abort": {
+      "already_configured": "This stop is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Red Regional options",
+        "description": "Filters, live tracking, and polling for this stop.",
+        "data": {
+          "routes_whitelist": "Only these routes",
+          "destinations": "Only these destinations",
+          "max_departures": "Max departures",
+          "look_ahead_min": "Look ahead (minutes)",
+          "walk_offset_min": "Walking time (minutes)",
+          "track_vehicles": "Track live bus positions",
+          "tracked_routes": "Tracked routes",
+          "scan_interval_s": "Poll every (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "next_departure": {
+        "name": "Next departure"
+      },
+      "departures_count": {
+        "name": "Departures"
+      }
+    },
+    "binary_sensor": {
+      "service_alert": {
+        "name": "Service alert"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Refresh departures",
+      "description": "Force an immediate poll of a stop entry.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Config entry",
+          "description": "Entry to refresh."
+        },
+        "device_id": {
+          "name": "Device",
+          "description": "Device of the entry to refresh."
+        }
+      }
+    },
+    "lookup_stop": {
+      "name": "Look up a stop",
+      "description": "Search cached stops by code or name fragment.",
+      "fields": {
+        "zone_uuid": {
+          "name": "Zone",
+          "description": "Zone UUID to search in."
+        },
+        "query": {
+          "name": "Query",
+          "description": "Stop code or name fragment."
+        },
+        "limit": {
+          "name": "Limit",
+          "description": "Maximum candidates to return."
+        }
+      }
+    },
+    "get_vehicles": {
+      "name": "Get live vehicles",
+      "description": "Return live GPS telemetry for one route and direction.",
+      "fields": {
+        "zone_uuid": {
+          "name": "Zone",
+          "description": "Zone UUID to query."
+        },
+        "route": {
+          "name": "Route",
+          "description": "Route short name, e.g. 44B."
+        },
+        "direction": {
+          "name": "Direction",
+          "description": "I for outbound, R for return."
+        }
+      }
+    }
+  },
+  "issues": {
+    "invalid_stop": {
+      "title": "Unknown bus stop",
+      "description": "Stop {stop_code} is no longer reported by the backend. Reconfigure the entry with a valid stop code.",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Fix unknown stop",
+            "description": "Open the entry settings to pick a valid stop code."
+          }
+        }
+      }
+    },
+    "backend_unreachable": {
+      "title": "Backend unreachable",
+      "description": "Stop {stop_code} has not answered several polls in a row. Confirm to reload the entry and retry.",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Retry the backend",
+            "description": "Reload the entry and retry the next poll now."
+          }
+        }
+      }
+    }
+  }
+}

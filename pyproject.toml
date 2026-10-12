@@ -1,0 +1,17 @@
+[project]
+name = "ha-red-regional"
+version = "0.1.0"
+description = "Red Regional Home Assistant integration"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

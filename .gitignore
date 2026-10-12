@@ -1,0 +1,20 @@
+# Nix
+.result
+.direnv/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.venv/
+
+# HA runtime
+*.log
+.storage/
+
+# Local GTFS cache
+gtfs*.zip
+transporte_regional.db

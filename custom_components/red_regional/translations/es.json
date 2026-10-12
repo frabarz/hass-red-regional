@@ -1,0 +1,166 @@
+{
+  "title": "Red Regional",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Seleccionar zona",
+        "description": "Elija la ciudad (zona de operación) de esta parada.",
+        "data": {
+          "zone_uuid": "Zona"
+        }
+      },
+      "stop": {
+        "title": "Agregar parada",
+        "description": "Ingrese el código de la parada indicado en la señalética, ej. P45068.",
+        "data": {
+          "stop_code": "Código de parada"
+        }
+      },
+      "filters": {
+        "title": "Opciones de salidas",
+        "description": "Filtros opcionales y frecuencia. Use comas para listas; rutas seguidas como RUTA o RUTA:I|R.",
+        "data": {
+          "routes_whitelist": "Solo estas rutas",
+          "destinations": "Solo estos destinos",
+          "max_departures": "Máximo de salidas",
+          "look_ahead_min": "Anticipación (minutos)",
+          "walk_offset_min": "Caminata (minutos)",
+          "track_vehicles": "Seguir buses en vivo",
+          "tracked_routes": "Rutas seguidas",
+          "scan_interval_s": "Consultar cada (segundos)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconectar Red Regional",
+        "description": "El servidor rechazó las consultas recientes. Confirme para reintentar esta parada.",
+        "data": {}
+      },
+      "reconfigure": {
+        "title": "Cambiar parada Red Regional",
+        "description": "Elija una nueva zona o código de parada para esta entrada.",
+        "data": {
+          "zone_uuid": "Zona",
+          "stop_code": "Código de parada"
+        }
+      }
+    },
+    "error": {
+      "invalid_stop": "Código de parada inválido para esta zona.",
+      "cannot_connect": "No se puede conectar al servidor TransApp."
+    },
+    "abort": {
+      "already_configured": "Esta parada ya está configurada."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de Red Regional",
+        "description": "Filtros, seguimiento en vivo y frecuencia para esta parada.",
+        "data": {
+          "routes_whitelist": "Solo estas rutas",
+          "destinations": "Solo estos destinos",
+          "max_departures": "Máximo de salidas",
+          "look_ahead_min": "Anticipación (minutos)",
+          "walk_offset_min": "Caminata (minutos)",
+          "track_vehicles": "Seguir buses en vivo",
+          "tracked_routes": "Rutas seguidas",
+          "scan_interval_s": "Consultar cada (segundos)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "next_departure": {
+        "name": "Próxima llegada"
+      },
+      "departures_count": {
+        "name": "Salidas"
+      }
+    },
+    "binary_sensor": {
+      "service_alert": {
+        "name": "Alerta de servicio"
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Actualizar salidas",
+      "description": "Fuerza una consulta inmediata de una parada.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Entrada",
+          "description": "Entrada a actualizar."
+        },
+        "device_id": {
+          "name": "Dispositivo",
+          "description": "Dispositivo de la entrada a actualizar."
+        }
+      }
+    },
+    "lookup_stop": {
+      "name": "Buscar parada",
+      "description": "Busca paradas en caché por código o fragmento de nombre.",
+      "fields": {
+        "zone_uuid": {
+          "name": "Zona",
+          "description": "UUID de la zona donde buscar."
+        },
+        "query": {
+          "name": "Búsqueda",
+          "description": "Código de parada o fragmento de nombre."
+        },
+        "limit": {
+          "name": "Límite",
+          "description": "Máximo de candidatos a devolver."
+        }
+      }
+    },
+    "get_vehicles": {
+      "name": "Obtener buses en vivo",
+      "description": "Devuelve telemetría GPS en vivo de una ruta y sentido.",
+      "fields": {
+        "zone_uuid": {
+          "name": "Zona",
+          "description": "UUID de la zona a consultar."
+        },
+        "route": {
+          "name": "Ruta",
+          "description": "Nombre corto de la ruta, ej. 44B."
+        },
+        "direction": {
+          "name": "Sentido",
+          "description": "I de ida, R de retorno."
+        }
+      }
+    }
+  },
+  "issues": {
+    "invalid_stop": {
+      "title": "Parada desconocida",
+      "description": "La parada {stop_code} ya no es reportada por el servidor. Reconfigure la entrada con un código válido.",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Corregir parada desconocida",
+            "description": "Abra los ajustes de la entrada para elegir un código válido."
+          }
+        }
+      }
+    },
+    "backend_unreachable": {
+      "title": "Servidor inalcanzable",
+      "description": "La parada {stop_code} no ha respondido varias consultas seguidas. Confirme para recargar la entrada y reintentar.",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Reintentar el servidor",
+            "description": "Recargue la entrada y reintente la próxima consulta ahora."
+          }
+        }
+      }
+    }
+  }
+}

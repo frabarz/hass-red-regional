@@ -1,0 +1,69 @@
+refresh:
+  name: Refresh departures
+  description: Force an immediate poll of a stop entry.
+  fields:
+    config_entry_id:
+      name: Config entry
+      description: Entry to refresh.
+      required: false
+      selector:
+        text:
+    device_id:
+      name: Device
+      description: Device of the entry to refresh.
+      required: false
+      selector:
+        device:
+          integration: red_regional
+lookup_stop:
+  name: Look up a stop
+  description: Search cached stops by code or name fragment.
+  fields:
+    zone_uuid:
+      name: Zone
+      description: Zone UUID to search in.
+      required: true
+      selector:
+        text:
+    query:
+      name: Query
+      description: Stop code or name fragment.
+      required: true
+      selector:
+        text:
+    limit:
+      name: Limit
+      description: Maximum candidates to return.
+      required: false
+      default: 8
+      selector:
+        number:
+          min: 1
+          max: 25
+          mode: box
+get_vehicles:
+  name: Get live vehicles
+  description: Return live GPS telemetry for one route and direction.
+  fields:
+    zone_uuid:
+      name: Zone
+      description: Zone UUID to query.
+      required: true
+      selector:
+        text:
+    route:
+      name: Route
+      description: Route short name, e.g. 44B.
+      required: true
+      selector:
+        text:
+    direction:
+      name: Direction
+      description: I for outbound, R for return.
+      required: false
+      default: I
+      selector:
+        select:
+          options:
+            - I
+            - R
