@@ -13,6 +13,16 @@ from homeassistant.helpers import issue_registry as ir
 from .const import DOMAIN
 
 
+def _description_placeholders(
+    hass: HomeAssistant, issue_id: str
+) -> dict[str, str] | None:
+    """Return the placeholders of a live issue, if it still exists."""
+    issue = ir.async_get(hass).async_get_issue(DOMAIN, issue_id)
+    if issue is None or not issue.translation_placeholders:
+        return None
+    return dict(issue.translation_placeholders)
+
+
 class InvalidStopRepairFlow(RepairsFlow):
     """Hand an unknown stop to the reconfigure flow."""
 
@@ -42,7 +52,13 @@ class InvalidStopRepairFlow(RepairsFlow):
                 reason="reconfigure",
                 next_flow=(FlowType.CONFIG_FLOW, reconfig["flow_id"]),
             )
-        return self.async_show_form(step_id="confirm", data_schema=vol.Schema({}))
+        return self.async_show_form(
+            step_id="confirm",
+            data_schema=vol.Schema({}),
+            description_placeholders=_description_placeholders(
+                self.hass, self.issue_id
+            ),
+        )
 
 
 class BackendUnreachableRepairFlow(RepairsFlow):
@@ -62,7 +78,13 @@ class BackendUnreachableRepairFlow(RepairsFlow):
             assert self.data is not None
             await self.hass.config_entries.async_reload(str(self.data["entry_id"]))
             return self.async_create_entry(title="", data={})
-        return self.async_show_form(step_id="confirm", data_schema=vol.Schema({}))
+        return self.async_show_form(
+            step_id="confirm",
+            data_schema=vol.Schema({}),
+            description_placeholders=_description_placeholders(
+                self.hass, self.issue_id
+            ),
+        )
 
 
 async def async_create_fix_flow(

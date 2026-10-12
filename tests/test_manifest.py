@@ -34,12 +34,18 @@ def test_version_sync_manifest_nix() -> None:
     assert re.match(r"^\d+\.\d+\.\d+$", manifest["version"])
 
 
-def test_homeassistant_floor_sync_hacs() -> None:
-    """Manifest and HACS agree on the minimum Home Assistant version."""
-    manifest = _manifest()
+def test_homeassistant_floor_in_hacs() -> None:
+    """HACS metadata pins the minimum Home Assistant version.
+
+    The floor lives in hacs.json only: ``homeassistant`` is not a valid
+    manifest.json key (hassfest rejects it).
+    """
+    from awesomeversion import AwesomeVersion
+
     hacs = json.loads(Path("hacs.json").read_text())
-    assert hacs["homeassistant"] == manifest["homeassistant"]
+    assert AwesomeVersion(hacs["homeassistant"]) >= AwesomeVersion("2026.1.0")
     assert hacs["country"] == "CL"
+    assert "homeassistant" not in _manifest()
 
 
 def test_requirements_mirror_manifest() -> None:

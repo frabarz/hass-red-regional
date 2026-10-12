@@ -139,25 +139,23 @@
   },
   "issues": {
     "invalid_stop": {
-      "title": "Unknown bus stop",
-      "description": "Stop {stop_code} is no longer reported by the backend. Reconfigure the entry with a valid stop code.",
+      "title": "Unknown bus stop {stop_code}",
       "fix_flow": {
         "step": {
           "confirm": {
             "title": "Fix unknown stop",
-            "description": "Open the entry settings to pick a valid stop code."
+            "description": "Stop {stop_code} is no longer reported by the backend. Reconfigure the entry with a valid stop code."
           }
         }
       }
     },
     "backend_unreachable": {
-      "title": "Backend unreachable",
-      "description": "Stop {stop_code} has not answered several polls in a row. Confirm to reload the entry and retry.",
+      "title": "Backend unreachable ({stop_code})",
       "fix_flow": {
         "step": {
           "confirm": {
             "title": "Retry the backend",
-            "description": "Reload the entry and retry the next poll now."
+            "description": "Stop {stop_code} has not answered several polls in a row. Confirm to reload the entry and retry."
           }
         }
       }

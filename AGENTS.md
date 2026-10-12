@@ -18,8 +18,7 @@ alerts, live bus GPS. HACS-installable repo **and** Nix flake (`packages`,
 - Behavior spec: `.design/spec/spec-design-red-regional-ha.md` (source of
   truth for entities, polling, filters). API research: `findings.md`.
 - Toolchain: Nix flake, HA 2026.9.x + Python 3.14 in dev shell; minimum
-  supported runtime is HA 2026.1 (Python >= 3.13) per `manifest.json` /
-  `hacs.json`. Keep code `py313`-compatible (`ruff target-version = py313`).
+  supported runtime is HA 2026.1 (Python >= 3.13) per `hacs.json`. Keep code `py313`-compatible (`ruff target-version = py313`).
   `pytest` +
   `pytest-homeassistant-custom-component`.
 

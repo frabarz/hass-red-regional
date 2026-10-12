@@ -11,18 +11,24 @@ jobs:
     strategy:
       matrix:
         include:
-          # Oldest supported release (HA 2026.1 needs Python >= 3.13.2)
+          # Oldest supported release (HA 2026.1 needs Python >= 3.13.2).
+          # pytest-homeassistant-custom-component is extracted from one HA
+          # release and breaks against any other, so each entry pins the
+          # plugin version built for its HA version (see the plugin's
+          # README badge / requires_dist for the mapping).
           - python-version: "3.13"
-            ha-version: "2026.1"
+            ha-version: "2026.1.1"
+            phcc-version: "0.13.306"
           # Latest tested release
           - python-version: "3.14"
-            ha-version: "2026.9"
+            ha-version: "2026.9.0"
+            phcc-version: "0.13.363"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -r requirements_test.txt
-      - run: pip install "homeassistant==${{ matrix.ha-version }}.*"
+      - run: pip install "pytest-homeassistant-custom-component==${{ matrix.phcc-version }}" "homeassistant==${{ matrix.ha-version }}"
       - run: ruff check . && ruff format --check .
       - run: pytest --cov --cov-report=term-missing

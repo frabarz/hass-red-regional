@@ -1,7 +1,9 @@
-# Test-only deps. The homeassistant version under test is NOT pinned here;
-# CI installs it from the matrix (oldest supported 2026.1.x through latest).
+# Test-only deps. pytest-homeassistant-custom-component is extracted from one
+# specific Home Assistant release, so its version MUST match the HA version
+# under test; both are pinned per-matrix-entry in .github/workflows/test.yml
+# (do not add the plugin here, or pip will install its latest release and
+# then clash with the HA version from the matrix).
 # Local nix devShell always uses the nixpkgs HA (currently 2026.9.x).
-pytest-homeassistant-custom-component>=0.13
 pytest-asyncio
 pytest-aiohttp
 pytest-cov

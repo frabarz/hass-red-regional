@@ -139,25 +139,23 @@
   },
   "issues": {
     "invalid_stop": {
-      "title": "Parada desconocida",
-      "description": "La parada {stop_code} ya no es reportada por el servidor. Reconfigure la entrada con un código válido.",
+      "title": "Parada desconocida {stop_code}",
       "fix_flow": {
         "step": {
           "confirm": {
             "title": "Corregir parada desconocida",
-            "description": "Abra los ajustes de la entrada para elegir un código válido."
+            "description": "La parada {stop_code} ya no es reportada por el servidor. Reconfigure la entrada con un código válido."
           }
         }
       }
     },
     "backend_unreachable": {
-      "title": "Servidor inalcanzable",
-      "description": "La parada {stop_code} no ha respondido varias consultas seguidas. Confirme para recargar la entrada y reintentar.",
+      "title": "Servidor inalcanzable ({stop_code})",
       "fix_flow": {
         "step": {
           "confirm": {
             "title": "Reintentar el servidor",
-            "description": "Recargue la entrada y reintente la próxima consulta ahora."
+            "description": "La parada {stop_code} no ha respondido varias consultas seguidas. Confirme para recargar la entrada y reintentar."
           }
         }
       }

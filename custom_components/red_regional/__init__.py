@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.typing import ConfigType
 
@@ -18,6 +19,7 @@ from .const import (
     CONF_TRACKED_ROUTES,
     CONF_ZONE_NAME,
     CONF_ZONE_UUID,
+    DOMAIN,
 )
 from .coordinator import (
     RedRegionalCoordinator,
@@ -27,6 +29,8 @@ from .coordinator import (
 from .services import async_setup_services
 
 PLATFORMS: list[str] = ["sensor", "binary_sensor", "device_tracker"]
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 @dataclass
