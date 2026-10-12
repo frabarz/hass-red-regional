@@ -20,6 +20,7 @@ from custom_components.red_regional.const import (
     DOMAIN,
 )
 from custom_components.red_regional.sensor import DeparturesCountSensor
+from tests.conftest import device_by_identifier
 
 pytestmark = pytest.mark.usefixtures("enable_custom_integrations")
 
@@ -157,9 +158,7 @@ async def test_unique_ids_device_and_disabled_count(
     assert count_entry is not None
     assert count_entry.disabled_by is er.RegistryEntryDisabler.INTEGRATION
     devices = dr.async_get(hass)
-    device = devices.async_get_device_by_identifier(
-        (DOMAIN, f"{ZONE}_P45068"), entry.entry_id
-    )
+    device = device_by_identifier(devices, (DOMAIN, f"{ZONE}_P45068"), entry.entry_id)
     assert device is not None
     assert device.manufacturer == "DTPR / Red Regional"
     assert device.model == "Gran Concepción"

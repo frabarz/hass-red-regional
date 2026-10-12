@@ -70,10 +70,9 @@ def _entry_for_refresh(hass: HomeAssistant, call: ServiceCall) -> ConfigEntry:
         raise ServiceValidationError(f"Unknown Red Regional entry: {entry_id}")
     device_id = call.data.get("device_id")
     if device_id is not None:
-        device = next(
-            (item for item in dr.async_get(hass).devices if item.id == device_id),
-            None,
-        )
+        # async_get(device_id) exists across versions; iterating .devices
+        # does not (keys on old HA, entries on new HA).
+        device = dr.async_get(hass).async_get(device_id)
         if device is not None:
             for candidate_id in device.config_entries:
                 candidate = hass.config_entries.async_get_entry(candidate_id)

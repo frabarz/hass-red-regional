@@ -22,6 +22,7 @@ from custom_components.red_regional.const import (
     DOMAIN,
 )
 from custom_components.red_regional.services import async_setup_services
+from tests.conftest import device_by_identifier
 
 pytestmark = pytest.mark.usefixtures("enable_custom_integrations")
 
@@ -118,8 +119,8 @@ async def test_refresh_by_device(
     """Refresh by device resolves the owning entry."""
     calls: list[tuple[str, str]] = []
     entry = await _setup_entry(hass, monkeypatch, calls)
-    device = dr.async_get(hass).async_get_device_by_identifier(
-        (DOMAIN, f"{ZONE}_P45068"), entry.entry_id
+    device = device_by_identifier(
+        dr.async_get(hass), (DOMAIN, f"{ZONE}_P45068"), entry.entry_id
     )
     assert device is not None
     before = len(calls)
