@@ -6,11 +6,17 @@ from typing import Any
 
 import voluptuous as vol
 from homeassistant import config_entries, data_entry_flow
-from homeassistant.components.repairs import FlowType, RepairsFlow
+from homeassistant.components import repairs as repairs_module
+from homeassistant.components.repairs import RepairsFlow
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir
 
 from .const import DOMAIN
+
+# HA before the repair-to-config handoff API (e.g. 2026.1) exports no
+# FlowType, and RepairsFlow.async_abort takes no next_flow argument.
+# getattr (not a version check) keeps both branches reachable for checkers.
+_REPAIR_FLOW_TYPE = getattr(repairs_module, "FlowType", None)
 
 
 def _description_placeholders(
@@ -40,18 +46,22 @@ class InvalidStopRepairFlow(RepairsFlow):
             assert self.data is not None
             entry_id = str(self.data["entry_id"])
             issue_id: str = self.issue_id
-            reconfig = await self.hass.config_entries.flow.async_init(
-                DOMAIN,
-                context={
-                    "source": config_entries.SOURCE_RECONFIGURE,
-                    "entry_id": entry_id,
-                },
-            )
             ir.async_delete_issue(self.hass, DOMAIN, issue_id)
-            return self.async_abort(
-                reason="reconfigure",
-                next_flow=(FlowType.CONFIG_FLOW, reconfig["flow_id"]),
-            )
+            if _REPAIR_FLOW_TYPE is not None:
+                reconfig = await self.hass.config_entries.flow.async_init(
+                    DOMAIN,
+                    context={
+                        "source": config_entries.SOURCE_RECONFIGURE,
+                        "entry_id": entry_id,
+                    },
+                )
+                return self.async_abort(
+                    reason="reconfigure",
+                    next_flow=(_REPAIR_FLOW_TYPE.CONFIG_FLOW, reconfig["flow_id"]),
+                )
+            # Older HA: no handoff API, so just close the issue. The user
+            # reconfigures from the integration card instead.
+            return self.async_abort(reason="reconfigure")
         return self.async_show_form(
             step_id="confirm",
             data_schema=vol.Schema({}),
