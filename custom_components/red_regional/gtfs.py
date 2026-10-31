@@ -183,6 +183,16 @@ def _load_zip(zip_path: Path) -> GtfsIndex:
     return parse_gtfs_zip(zip_path.read_bytes())
 
 
+def _read_cache_state(zip_path: Path, version_path: Path) -> tuple[str | None, bool]:
+    """Return the cached version and whether a ZIP exists (runs in an executor)."""
+    version = (
+        version_path.read_text(encoding="utf-8").strip()
+        if version_path.is_file()
+        else None
+    )
+    return version, zip_path.is_file()
+
+
 async def async_ensure_gtfs(
     hass: HomeAssistant, client: TransAppClient, zone_uuid: str
 ) -> GtfsIndex:
@@ -205,12 +215,10 @@ async def async_ensure_gtfs(
     if version is not None and memory is not None and memory[0] == version:
         return memory[1]
     try:
-        disk_version = (
-            version_path.read_text(encoding="utf-8").strip()
-            if version_path.exists()
-            else None
+        disk_version, has_zip = await hass.async_add_executor_job(
+            _read_cache_state, zip_path, version_path
         )
-        if zip_path.exists() and (version is None or disk_version == version):
+        if has_zip and (version is None or disk_version == version):
             index = await hass.async_add_executor_job(_load_zip, zip_path)
             _MEMORY[zone_uuid] = (disk_version, index)
             return index
@@ -225,13 +233,13 @@ async def async_ensure_gtfs(
         _LOGGER.warning(
             "GTFS refresh failed for %s, using stale data: %s", zone_uuid, err
         )
-    if zip_path.exists():
-        try:
-            index = await hass.async_add_executor_job(_load_zip, zip_path)
-            _MEMORY[zone_uuid] = (None, index)
-            return index
-        except OSError as err:
-            _LOGGER.debug("GTFS stale load failed for %s: %s", zone_uuid, err)
+    try:
+        index = await hass.async_add_executor_job(_load_zip, zip_path)
+    except OSError as err:
+        _LOGGER.debug("GTFS stale load failed for %s: %s", zone_uuid, err)
+    else:
+        _MEMORY[zone_uuid] = (None, index)
+        return index
     if memory is not None:
         return memory[1]
     return GtfsIndex.empty()
