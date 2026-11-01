@@ -5,16 +5,13 @@
 Unofficial Home Assistant custom integration for Chilean Red Regional public
 transport (DTPR / TransApp backend): real-time arrival predictions, service
 alerts, live bus GPS. HACS-installable repo **and** Nix flake (`packages`,
-`nixosModules`, `devShells`) for NixOS deployment.
+`devShells`) for NixOS deployment.
 
 - Integration code: `custom_components/red_regional/` (domain `red_regional`,
   config-flow-only, `cloud_polling`, currently zero runtime `requirements`:
   stdlib + HA-bundled `aiohttp` only).
 - Nix package: `pkgs/red-regional-ha/package.nix` (via
   `buildHomeAssistantComponent`).
-- NixOS module: `nixos-modules/red-regional.nix`
-  (`services.hass-red-regional.{enable, package}` → appends to
-  `services.home-assistant.customComponents`).
 - Behavior spec: `.design/spec/spec-design-red-regional-ha.md` (source of
   truth for entities, polling, filters). API research: `findings.md`.
 - Toolchain: Nix flake, HA 2026.9.x + Python 3.14 in dev shell; minimum
@@ -38,14 +35,15 @@ alerts, live bus GPS. HACS-installable repo **and** Nix flake (`packages`,
   follow it; do not invent entity names.
 - NixOS consumer wiring:
   ```nix
-  imports = [ hass-red-regional.nixosModules.default ];
-  services.hass-red-regional = {
+  services.home-assistant = {
     enable = true;
-    package = hass-red-regional.packages.${pkgs.system}.red-regional-ha;
+    customComponents = [
+      inputs.hass-red-regional.packages.${pkgs.stdenv.hostPlatform.system}.default
+    ];
   };
   ```
-  Requires `services.home-assistant.enable = true`. Zone/stop setup stays in
-  the HA UI (no declarative YAML for this integration).
+  Keep `inputs.nixpkgs.follows = "nixpkgs"` in the flake input. Zone/stop
+  setup stays in the HA UI (no declarative YAML for this integration).
 - Keep `custom_components/red_regional/manifest.json` (`domain`, `version`,
   `requirements`) in sync with `pkgs/red-regional-ha/package.nix`
   (`domain`, `version`, `dependencies`) and `requirements.txt`.

@@ -165,7 +165,7 @@ Incremental, executable plan to take `custom_components/red_regional/` from the 
 - **DEP-002**: `pytest`, `pytest-homeassistant-custom-component`, `pytest-asyncio` (auto mode), `aresponses`/`aioresponses` for HTTP mocks.
 - **DEP-003**: Live TransApp backend `https://phone.dtpr.transapp.cl/v7/phone` for fixture capture; pinned `App-Version 2.5.1` + `Os-type Android` headers.
 - **DEP-004**: Reference logic only: `github.com/edwinroket/red-regional-api` (`client/transapp.py`, `gtfs/import_gtfs_sqlite.py`) — verify license before porting lines.
-- **DEP-005**: Nix flake outputs (`packages.red-regional-ha`, `nixosModules.default`, `devShells`) and `pkgs/red-regional-ha/package.nix` manifest sync.
+- **DEP-005**: Nix flake outputs (`packages.default`, `packages.red-regional-ha`, `devShells`) and `pkgs/red-regional-ha/package.nix` manifest sync.
 - **DEP-006**: Parity references consulted: `ha_swiss_transport` (board duality), `trollp/SL` (next/count/status split), `rejseplanen` (HA-standard sensors), `openpublictransport` (disabled-by-default extras), `511_transit` HACS (stop+vehicle device grouping), `gtfs_rt` forks (map pattern).
 
 ## 5. Files

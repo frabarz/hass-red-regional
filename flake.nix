@@ -37,9 +37,6 @@
         }
       );
 
-      nixosModules.red-regional = import ./nixos-modules/red-regional.nix;
-      nixosModules.default = self.nixosModules.red-regional;
-
       devShells = nixpkgs.lib.genAttrs systems (
         system:
         let

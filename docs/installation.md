@@ -21,23 +21,27 @@ Home Assistant already ships.
 
 ```nix
 # flake.nix inputs
-hass-red-regional.url = "github:frabarz/hass-red-regional";
+hass-red-regional = {
+  url = "github:frabarz/hass-red-regional";
+  inputs.nixpkgs.follows = "nixpkgs";
+};
 
-# NixOS configuration
-imports = [ hass-red-regional.nixosModules.default ];
-
-services.home-assistant.enable = true;
-services.hass-red-regional = {
+# NixOS configuration (`inputs` is available via specialArgs)
+services.home-assistant = {
   enable = true;
-  package = hass-red-regional.packages.${pkgs.system}.red-regional-ha;
+  customComponents = [
+    inputs.hass-red-regional.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
 };
 ```
 
 Notes:
 
-- Requires `services.home-assistant.enable = true`; the module appends the
-  component to `services.home-assistant.customComponents`.
-- Use the **same nixpkgs input** for your system and this flake to avoid Home
-  Assistant version skew. See `nixos-modules/red-regional.nix`.
+- The stock Home Assistant module installs the component through
+  `services.home-assistant.customComponents`; no custom NixOS module is needed.
+- Keep `inputs.nixpkgs.follows = "nixpkgs"` so the component is built against
+  the same Home Assistant version you run.
+- Zone/stop setup stays in the Home Assistant UI (there is no declarative YAML
+  for this integration).
 
 Next: [Configuration](configuration.md).
